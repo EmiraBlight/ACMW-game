@@ -1,11 +1,12 @@
 import pygame
 import sys
 from enum import Enum
-
+from timingGame import timing_game
 class loc(Enum):
     none=0
     anvil = 1
     table = 2
+
 
 
 pygame.init()
@@ -19,7 +20,7 @@ BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 RED = (255,0,0)
 
-
+mini = False
 
 square_size = 50
 x, y = WIDTH // 2, HEIGHT // 2
@@ -40,8 +41,8 @@ def isNotColliding(p)-> bool:
     return True
 
 location = loc.none
-
-while True:
+running = True
+while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -64,6 +65,12 @@ while True:
             if location != loc.anvil:
                 location = loc.anvil
                 print(f"Player is colliding with the anvil!")
+                mini=True
+                res= timing_game(screen)
+                mini=False
+                if res>0:
+                    print(f"{res=}")
+                    # Will add logic to give player item here
                 break
         if player.colliderect(item) and item==table:
             if location!= loc.table:
