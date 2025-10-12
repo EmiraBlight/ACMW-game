@@ -1,5 +1,12 @@
 import pygame
 import sys
+from enum import Enum
+
+class loc(Enum):
+    none=0
+    anvil = 1
+    table = 2
+
 
 pygame.init()
 
@@ -12,6 +19,8 @@ BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 RED = (255,0,0)
 
+
+
 square_size = 50
 x, y = WIDTH // 2, HEIGHT // 2
 target_x, target_y = x, y
@@ -21,6 +30,8 @@ anvil = pygame.Rect(100, 100,75,75)
 table = pygame.Rect(250,250, 75,225)
 interactables = [anvil,table]  # list of things we can interact with
 clock = pygame.time.Clock()
+
+location = loc.none
 
 while True:
     for event in pygame.event.get():
@@ -42,9 +53,19 @@ while True:
     # Check for collisions with interactables
     for item in interactables:
         if player.colliderect(item) and item==anvil:
-            print(f"Player is colliding with the anvil!")
+            if location != loc.anvil:
+                location = loc.anvil
+                print(f"Player is colliding with the anvil!")
+                break
         if player.colliderect(item) and item==table:
-            print(f"Player is colliding with the table!")
+            if location!= loc.table:
+                location = loc.table
+                print(f"Player is colliding with the table!")
+                break
+        elif not player.colliderect(anvil) and not player.colliderect(table):
+            if location!= loc.none:
+                print("player not colliding with anything!")
+                location = loc.none
 
     screen.fill(BLACK)
     pygame.draw.rect(screen, GREEN, player)
