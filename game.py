@@ -31,6 +31,14 @@ table = pygame.Rect(250,250, 75,225)
 interactables = [anvil,table]  # list of things we can interact with
 clock = pygame.time.Clock()
 
+
+def isNotColliding(p)-> bool:
+
+    for item in interactables:
+        if p.colliderect(item):
+            return False
+    return True
+
 location = loc.none
 
 while True:
@@ -62,7 +70,7 @@ while True:
                 location = loc.table
                 print(f"Player is colliding with the table!")
                 break
-        elif not player.colliderect(anvil) and not player.colliderect(table):
+        elif not isNotColliding(player):
             if location!= loc.none:
                 print("player not colliding with anything!")
                 location = loc.none
