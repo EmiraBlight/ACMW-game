@@ -1,5 +1,4 @@
 import pygame
-import sys
 from enum import Enum
 from timingGame import timing_game
 class loc(Enum):
@@ -46,7 +45,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-            sys.exit()
+            exit()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 target_x, target_y = event.pos
@@ -66,6 +65,7 @@ while running:
                 location = loc.anvil
                 print(f"Player is colliding with the anvil!")
                 mini=True
+                target_x, target_y = x, y# stops user from moving when game ends
                 res= timing_game(screen)
                 mini=False
                 if res>0:
