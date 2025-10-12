@@ -70,7 +70,7 @@ while True:
                 location = loc.table
                 print(f"Player is colliding with the table!")
                 break
-        elif not isNotColliding(player):
+        elif isNotColliding(player):
             if location!= loc.none:
                 print("player not colliding with anything!")
                 location = loc.none
