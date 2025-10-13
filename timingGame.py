@@ -1,7 +1,5 @@
 import pygame
 
-has_run = False
-
 def timing_game(screen)->int:
     MARKERSIZE = 40
     WIDTH, HEIGHT = 1920, 1080
@@ -19,6 +17,11 @@ def timing_game(screen)->int:
     direction = 1
     speed = 10
 
+    RED = (255, 0, 0)
+    LIME = (100, 255, 0)
+    YELLOW = (255, 255, 0)
+    BLUE = (0, 150, 255)
+    GREEN = (0, 255, 0)
     score = 0
     clicks = 0
     running = True
@@ -52,17 +55,17 @@ def timing_game(screen)->int:
             direction *= -1 #Turn arround if at end of block
 
 
-        pygame.draw.rect(screen, (255, 0, 0),(bar_x, bar_y - bar_height//2, bar_length, bar_height))
+        pygame.draw.rect(screen, RED,(bar_x, bar_y - bar_height//2, bar_length, bar_height))
 
 
-        pygame.draw.line(screen, (0, 255, 0),(WIDTH//2, bar_y - (bar_height//2)), (WIDTH//2, bar_y+ bar_height//2-1), 20)#green center
+        pygame.draw.line(screen, GREEN,(WIDTH//2, bar_y - (bar_height//2)), (WIDTH//2, bar_y+ bar_height//2-1), 20)#green center
 
-        pygame.draw.line(screen, (100, 255, 0),(WIDTH//2+40, bar_y - (bar_height//2)), (WIDTH//2+40, bar_y+ bar_height//2-1), 60)
-        pygame.draw.line(screen, (100, 255, 0),(WIDTH//2-40, bar_y - (bar_height//2)), (WIDTH//2-40, bar_y+ bar_height//2-1), 60)#greenish yellow markers
+        pygame.draw.line(screen, LIME,(WIDTH//2+40, bar_y - (bar_height//2)), (WIDTH//2+40, bar_y+ bar_height//2-1), 60)
+        pygame.draw.line(screen, LIME,(WIDTH//2-40, bar_y - (bar_height//2)), (WIDTH//2-40, bar_y+ bar_height//2-1), 60)#greenish yellow markers
 
-        pygame.draw.line(screen, (255, 255, 0),(WIDTH//2-120, bar_y - bar_height//2), (WIDTH//2-120, bar_y+ bar_height//2-1), 100)#yellow
-        pygame.draw.line(screen, (255, 255, 0),(WIDTH//2+120, bar_y - bar_height//2), (WIDTH//2+120, bar_y+ bar_height//2-1), 100)
-        pygame.draw.rect(screen, (0, 150, 255),(pos_x, bar_y - square_size//2, square_size, square_size))
+        pygame.draw.line(screen, YELLOW,(WIDTH//2-120, bar_y - bar_height//2), (WIDTH//2-120, bar_y+ bar_height//2-1), 100)#yellow
+        pygame.draw.line(screen, YELLOW,(WIDTH//2+120, bar_y - bar_height//2), (WIDTH//2+120, bar_y+ bar_height//2-1), 100)
+        pygame.draw.rect(screen, BLUE,(pos_x, bar_y - square_size//2, square_size, square_size))
         text = font.render(f"Score: {score}/10", True, (255, 255, 255))
         screen.fill((0, 0, 0), text_surface)
         screen.blit(text, screen.fill((0, 0, 0), text_surface))
