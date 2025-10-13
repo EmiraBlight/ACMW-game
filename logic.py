@@ -1,11 +1,12 @@
 from random import choice
+unit_types = ["Sword","Bow","Staff"]
+inventory = {x:0 for x in unit_types}
 
 class unit:
     def __init__(self, type,strength=1):
         self.type = type
         self.strength = strength
 
-unit_types = ["sword","bow","staff"]
 
 def genUnits():
     for _ in range(2**1024):

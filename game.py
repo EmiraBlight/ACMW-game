@@ -1,5 +1,6 @@
 import pygame
 from enum import Enum
+from logic import inventory
 from timingGame import timing_game
 class loc(Enum):
     none=0
@@ -18,9 +19,6 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 RED = (255,0,0)
-
-mini = False
-
 square_size = 50
 x, y = WIDTH // 2, HEIGHT // 2
 target_x, target_y = x, y
@@ -41,6 +39,8 @@ def isNotColliding(p)-> bool:
 
 location = loc.none
 running = True
+itemHeld = None
+font = pygame.font.SysFont(None, 48)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -64,18 +64,22 @@ while running:
             if location != loc.anvil:
                 location = loc.anvil
                 print(f"Player is colliding with the anvil!")
-                mini=True
-                target_x, target_y = x, y# stops user from moving when game ends
-                res= timing_game(screen)
-                mini=False
-                if res>0:
-                    print(f"{res=}")
+                if not itemHeld:
+                    target_x, target_y = x, y# stops user from moving when game ends
+                    res= timing_game(screen)
+                    if res:
+                        print(f"{res=}")
+                        itemHeld = res
                     # Will add logic to give player item here
-                break
+                    break
         if player.colliderect(item) and item==table:
             if location!= loc.table:
                 location = loc.table
                 print(f"Player is colliding with the table!")
+                if itemHeld:
+                    inventory[itemHeld]+=1
+                    itemHeld= None
+                    print(f"{inventory=}")
                 break
         elif isNotColliding(player):
             if location!= loc.none:
@@ -86,6 +90,8 @@ while running:
     pygame.draw.rect(screen, GREEN, player)
     pygame.draw.rect(screen, BLUE, anvil)
     pygame.draw.rect(screen, RED, table)
-    pygame.display.flip()
+    text = font.render(f"Inventory: {str(inventory)}, Item held: {itemHeld}", True, (255, 255, 255))
+    screen.blit(text, (50, 50))
+    pygame.display.update()
 
     clock.tick(60)
