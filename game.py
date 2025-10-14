@@ -19,6 +19,7 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 RED = (255,0,0)
+YELLOW = (255,255,0)
 square_size = 50
 x, y = WIDTH // 2, HEIGHT // 2
 target_x, target_y = x, y

@@ -1,6 +1,6 @@
 import pygame
 from logic import unit_types
-
+from math import sqrt
 WIDTH, HEIGHT = 1920, 1080
 MARKERSIZE = 40
 bar_y = HEIGHT // 2
@@ -15,21 +15,41 @@ BLUE = (0, 150, 255)
 GREEN = (0, 255, 0)
 
 
+def getClosest(position,lookup:dict[str,tuple[int,int]])->str|None:
+
+    if not lookup:
+        return None
+
+    result = ""
+    closest = (2**63)-2 #big enough
+
+    for name,coord in lookup.items():
+        distance =sqrt((position[0]-coord[0])**2+(position[1]-coord[1])**2)
+        if distance< closest:
+            closest = distance
+            result = name
+    return result
+
+
+
 def timing_game(screen) -> str|None:
     pygame.font.init()
     font = pygame.font.SysFont(None, 48)
     options_text = pygame.font.SysFont(None, 36)
     selected_option = None
 
-
+    options =  {}
     def draw_menu(selected_idx=None):
         title = font.render("Select Weapon to forge", True, (255, 255, 255))
         screen.blit(title, (WIDTH // 2 - title.get_width() // 2, HEIGHT // 3))
 
+
         for i, option in enumerate(unit_types):
             color = (255, 255, 0) if selected_idx == i else (200, 200, 200)
             text = options_text.render(f"{i + 1}. {option}", True, color) #print out the options
-            screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 + i * 60))
+            pos = (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 + i * 60)
+            options.update({option:pos})
+            screen.blit(text, pos)
         pygame.display.update()
 
     running_menu = True
@@ -37,17 +57,9 @@ def timing_game(screen) -> str|None:
 
     while running_menu:
         for event in pygame.event.get():
-
-            if event.type == pygame.KEYDOWN:
-                if event.key in [pygame.K_1]:
-                    selected_option = unit_types[0]
-                    running_menu = False
-                elif event.key in [pygame.K_2]:
-                    selected_option = unit_types[1] #grab input and return result
-                    running_menu = False
-                elif event.key in [pygame.K_3]:
-                    selected_option = unit_types[2]
-                    running_menu = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                selected_option = getClosest(event.pos,options)
+                running_menu = False
 
         draw_menu()# render the option menu till a choice is made
 
