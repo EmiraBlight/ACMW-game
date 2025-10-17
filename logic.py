@@ -3,9 +3,13 @@ unit_types = ["Sword","Bow","Staff"]
 inventory = {x:0 for x in unit_types}
 
 class unit:
-    def __init__(self, type,strength=1):
+    def __init__(self, type,hp=100):
         self.type = type
-        self.strength = strength
+        self.hp = hp
+
+    def damage(self,dmg:int)->bool:
+        self.hp-=dmg
+        return self.hp>0
 
 
 def genUnits():

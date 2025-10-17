@@ -29,17 +29,18 @@ class horde:
 
     def __init__(self):
         self.dps = 0
-        self.hp = HORDEMAXHEALTH
+        self.hp = 0
 
     '''
     returns int if no damage was done to horde and the int represents dmg to do to troops,
     or a float representing the remaining health if dmg was done to boss as a percent
     '''
-    def attack(self,dmg:int)->float|int:
-        if dmg<=0:
-            return int(self.dps)
-        self.hp-= dmg
-        return float(self.hp/HORDEMAXHEALTH)
+    def progress(self)->float:
+        self.hp+=self.dps
+        return self.hp/HORDEMAXHEALTH
+
+    def noProgress(self)->int:
+        return self.dps
 
     def increaseDifficulty(self):
         self.dps+=HORDELVLUP

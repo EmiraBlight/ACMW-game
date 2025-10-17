@@ -1,7 +1,10 @@
 import pygame
 from enum import Enum
-from logic import inventory
+from logic import inventory,unit
 from timingGame import timing_game
+from horde import horde
+
+
 class loc(Enum):
     none=0
     anvil = 1
@@ -11,6 +14,10 @@ class loc(Enum):
 
 
 
+units :list[unit] = []
+
+second: int = 0
+min: int = 0
 pygame.init()
 WIDTH, HEIGHT = 1560, 821
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -34,6 +41,8 @@ bowString = pygame.Rect(506,618,35,77)
 interactables = [anvil,table,enchant,bowString]  # list of things we can interact with
 clock = pygame.time.Clock()
 
+
+h = horde()
 
 def isNotColliding(p)-> bool:
 
@@ -124,5 +133,12 @@ while running:
     text = font.render(f"Inventory: {str(inventory)}, Item held: {itemHeld}", True, (255, 255, 255))
     screen.blit(text, (50, 50))
     pygame.display.update()
-
+    second+=1
+    if second == 60:
+        second = 0
+        min+=1
+        if min%20==0:
+            h.increaseDifficulty()
+            print("diff increased!")
+        print(f"Hordes progress: {h.progress()}")
     clock.tick(60)
