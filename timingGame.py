@@ -1,7 +1,7 @@
 import pygame
 from logic import unit_types
 from math import sqrt
-WIDTH, HEIGHT = 1920, 1080
+WIDTH, HEIGHT = 1560, 821
 MARKERSIZE = 40
 bar_y = HEIGHT // 2
 bar_length = 600 #define resolution and game size specs
@@ -98,7 +98,6 @@ def timing_game(screen) -> str|None:
         if pos_x + square_size >= bar_x + bar_length or pos_x <= bar_x:
             direction *= -1
 
-        screen.fill((0, 0, 0))
         pygame.draw.rect(screen, RED, (bar_x, bar_y - bar_height // 2, bar_length, bar_height))
         pygame.draw.line(screen, GREEN, (WIDTH // 2, bar_y - bar_height // 2),
                          (WIDTH // 2, bar_y + bar_height // 2 - 1), 20)

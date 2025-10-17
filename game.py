@@ -10,9 +10,9 @@ class loc(Enum):
 
 
 pygame.init()
-
-WIDTH, HEIGHT = 1920, 1080
+WIDTH, HEIGHT = 1560, 821
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
+background_image = pygame.image.load('assets/background.png').convert()
 pygame.display.set_caption("Some cool game probably")
 
 GREEN = (0, 255, 0)
@@ -25,8 +25,8 @@ x, y = WIDTH // 2, HEIGHT // 2
 target_x, target_y = x, y
 speed = 7
 player = pygame.Rect(x - square_size // 2, y - square_size // 2, square_size, square_size)
-anvil = pygame.Rect(100, 100,75,75)
-table = pygame.Rect(250,250, 75,225)
+anvil = pygame.Rect(150, 250,75,75)
+table = pygame.Rect(294,405, 225,75)
 interactables = [anvil,table]  # list of things we can interact with
 clock = pygame.time.Clock()
 
@@ -48,8 +48,10 @@ while running:
             pygame.quit()
             exit()
         if event.type == pygame.MOUSEBUTTONDOWN:
+            print(event.pos)
             if event.button == 1:
-                target_x, target_y = event.pos
+                if event.pos[0]>108 and event.pos[0]<703 and event.pos[1]<703 and event.pos[1]>278:
+                    target_x, target_y = event.pos
     dx, dy = target_x - x, target_y - y
     distance = (dx ** 2 + dy ** 2) ** 0.5
     if distance > speed:
@@ -87,10 +89,10 @@ while running:
                 print("player not colliding with anything!")
                 location = loc.none
 
-    screen.fill(BLACK)
+    screen.blit(background_image, (0, 0))
     pygame.draw.rect(screen, GREEN, player)
-    pygame.draw.rect(screen, BLUE, anvil)
-    pygame.draw.rect(screen, RED, table)
+    #pygame.draw.rect(screen, BLUE, anvil)
+    #pygame.draw.rect(screen, RED, table) no longer render, just hitboxes now
     text = font.render(f"Inventory: {str(inventory)}, Item held: {itemHeld}", True, (255, 255, 255))
     screen.blit(text, (50, 50))
     pygame.display.update()
