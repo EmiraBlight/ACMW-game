@@ -3,14 +3,16 @@ unit_types = ["Sword","Bow","Staff"]
 inventory = {x:0 for x in unit_types}
 
 class unit:
-    def __init__(self, type,hp=100):
-        self.type = type
-        self.hp = hp
+    def __init__(self, type,hp:float=100.0):
+        self.type:float = type
+        self.hp:float = hp
 
-    def damage(self,dmg:int)->bool:
+    def damage(self,dmg:float)->bool:
         self.hp-=dmg
         return self.hp>0
 
+    def __repr__(self)->str:
+        return f"Unit of type: {self.type} with {self.hp}"
 
 def genUnits():
     for _ in range(2**1024):

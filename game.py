@@ -14,7 +14,7 @@ class loc(Enum):
 
 
 
-units :list[unit] = []
+units :list[unit] = [unit("sword",100),unit("Bow",100)]
 
 second: int = 0
 min: int = 0
@@ -117,7 +117,7 @@ while running:
                 location = loc.table
                 print(f"Player is colliding with the table!")
                 if itemHeld:
-                    inventory[itemHeld]+=1
+                    units.append(unit(itemHeld))
                     itemHeld= None
                     print(f"{inventory=}")
                 break
@@ -137,8 +137,15 @@ while running:
     if second == 60:
         second = 0
         min+=1
-        if min%20==0:
+        if min%5==0:
             h.increaseDifficulty()
             print("diff increased!")
-        print(f"Hordes progress: {h.progress()}")
+        if not units:
+            print(f"Hordes progress: {h.progress()}")
+        else:
+            units = [i for i in units if i.damage(h.getDmg()/len(units))]
+            print(units)
+
+
+
     clock.tick(60)
