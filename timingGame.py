@@ -32,36 +32,11 @@ def getClosest(position,lookup:dict[str,tuple[int,int]])->str|None:
 
 
 
-def timing_game(screen) -> str|None:
+def timing_game(screen) -> bool:
     pygame.font.init()
     font = pygame.font.SysFont(None, 48)
     options_text = pygame.font.SysFont(None, 36)
-    selected_option = None
 
-    options =  {}
-    def draw_menu(selected_idx=None):
-        title = font.render("Select Weapon to forge", True, (255, 255, 255))
-        screen.blit(title, (WIDTH // 2 - title.get_width() // 2, HEIGHT // 3))
-
-
-        for i, option in enumerate(unit_types):
-            color = (255, 255, 0) if selected_idx == i else (200, 200, 200)
-            text = options_text.render(f"{i + 1}. {option}", True, color) #print out the options
-            pos = (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 + i * 60)
-            options.update({option:pos})
-            screen.blit(text, pos)
-        pygame.display.update()
-
-    running_menu = True
-    draw_menu()
-
-    while running_menu:
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                selected_option = getClosest(event.pos,options)
-                running_menu = False
-
-        draw_menu()# render the option menu till a choice is made
 
     clock = pygame.time.Clock()
 
@@ -78,7 +53,7 @@ def timing_game(screen) -> str|None:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                return "Quit"
+                return False
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 clicks += 1
@@ -116,4 +91,4 @@ def timing_game(screen) -> str|None:
         pygame.display.update()
         clock.tick(60)
 
-    return selected_option
+    return True

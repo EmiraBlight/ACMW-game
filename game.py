@@ -6,6 +6,8 @@ class loc(Enum):
     none=0
     anvil = 1
     table = 2
+    enchant =3
+    bow = 4
 
 
 
@@ -27,7 +29,9 @@ speed = 7
 player = pygame.Rect(x - square_size // 2, y - square_size // 2, square_size, square_size)
 anvil = pygame.Rect(150, 250,75,75)
 table = pygame.Rect(294,405, 225,75)
-interactables = [anvil,table]  # list of things we can interact with
+enchant = pygame.Rect(85,445,88,211)
+bowString = pygame.Rect(506,618,35,77)
+interactables = [anvil,table,enchant,bowString]  # list of things we can interact with
 clock = pygame.time.Clock()
 
 
@@ -63,18 +67,42 @@ while running:
     player = pygame.Rect(x - square_size // 2, y - square_size // 2, square_size, square_size)
     # Check for collisions with interactables
     for item in interactables:
-        if player.colliderect(item) and item==anvil:
-            if location != loc.anvil:
-                location = loc.anvil
-                print(f"Player is colliding with the anvil!")
-                if not itemHeld:
-                    target_x, target_y = x, y# stops user from moving when game ends
-                    res= timing_game(screen)
-                    if res:
-                        print(f"{res=}")
-                        itemHeld = res
-                    # Will add logic to give player item here
-                    break
+        if player.colliderect(item):
+            if item==anvil:
+                if location != loc.anvil:
+                    location = loc.anvil
+                    print(f"Player is colliding with the anvil!")
+                    if not itemHeld:
+                        target_x, target_y = x, y
+                        res= timing_game(screen)
+                        if res:
+                            print(f"{res=}")
+                            itemHeld = "Sword"
+                        break
+            elif item==enchant:
+                if location!= loc.enchant:
+                    location = loc.enchant
+                    print(f"Player is colliding with the enchant table!")
+                    if not itemHeld:
+                        target_x, target_y = x, y
+                        res= timing_game(screen)
+                        if res:
+                            print(f"{res=}")
+                            itemHeld = "Staff"
+                        break
+            elif item==bowString:
+                if location!=loc.bow:
+                    location = loc.bow
+                    print(f"Player is colliding with the bow table!")
+                    if not itemHeld:
+                        target_x, target_y = x, y
+                        res= timing_game(screen)
+                        if res:
+                            print(f"{res=}")
+                            itemHeld = "Staff"
+                        break
+
+
         if player.colliderect(item) and item==table:
             if location!= loc.table:
                 location = loc.table
@@ -84,11 +112,11 @@ while running:
                     itemHeld= None
                     print(f"{inventory=}")
                 break
+
         elif isNotColliding(player):
             if location!= loc.none:
                 print("player not colliding with anything!")
                 location = loc.none
-
     screen.blit(background_image, (0, 0))
     pygame.draw.rect(screen, GREEN, player)
     #pygame.draw.rect(screen, BLUE, anvil)
