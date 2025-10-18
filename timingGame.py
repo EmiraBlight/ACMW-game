@@ -51,6 +51,7 @@ def timing_game(events:Queue) -> bool:
     speed = 8
 
     while running:
+        surface.fill((0, 0, 0, 0))
         while not events.empty():
             event = events.get()
             if event.type == pygame.QUIT:

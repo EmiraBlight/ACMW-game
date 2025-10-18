@@ -14,7 +14,6 @@ class loc(Enum):
     bow = 4
 
 mini_game_running = False
-mini_game_result = None
 
 event_queue = Queue()
 
@@ -99,9 +98,8 @@ while running:
                         if not mini_game_running:
                             mini_game_running = True
                             threading.Thread(target=run_timing_game_thread, daemon=True).start()
-                            if mini_game_result:
-                                itemHeld = "Sword"
-                                mini_game_result = None
+                            itemHeld = "Sword"
+                            mini_game_result = None
                         break
             elif item==enchant:
                 if location!= loc.enchant:
@@ -111,9 +109,8 @@ while running:
                         if not mini_game_running:
                             mini_game_running = True
                             threading.Thread(target=run_timing_game_thread, daemon=True).start()
-                            if mini_game_result:
-                                itemHeld = "Staff"
-                                mini_game_result = None
+                            itemHeld = "Staff"
+                            mini_game_result = None
                         break
             elif item==bowString:
                 if location!=loc.bow:
@@ -123,9 +120,8 @@ while running:
                         if not mini_game_running:
                             mini_game_running = True
                             threading.Thread(target=run_timing_game_thread, daemon=True).start()
-                            if mini_game_result:
-                                itemHeld = "Bow"
-                                mini_game_result = None
+                            itemHeld = "Bow"
+                            mini_game_result = None
                         break
 
 
