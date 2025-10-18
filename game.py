@@ -12,9 +12,9 @@ class loc(Enum):
     enchant =3
     bow = 4
 
+progress :float = 0
 
-
-units :list[unit] = [unit("sword",100),unit("Bow",100)]
+units :list[unit] = []
 
 second: int = 0
 min: int = 0
@@ -40,7 +40,8 @@ enchant = pygame.Rect(85,445,88,211)
 bowString = pygame.Rect(506,618,35,77)
 interactables = [anvil,table,enchant,bowString]  # list of things we can interact with
 clock = pygame.time.Clock()
-
+progressBar =  pygame.Rect((1431,159),(1,73))
+progressBar.topright = (1431,86)
 
 h = horde()
 
@@ -117,7 +118,7 @@ while running:
                 location = loc.table
                 print(f"Player is colliding with the table!")
                 if itemHeld:
-                    units.append(unit(itemHeld))
+                    units.append(unit(itemHeld,1000))
                     itemHeld= None
                     print(f"{inventory=}")
                 break
@@ -128,24 +129,29 @@ while running:
                 location = loc.none
     screen.blit(background_image, (0, 0))
     pygame.draw.rect(screen, GREEN, player)
-    #pygame.draw.rect(screen, BLUE, anvil)
-    #pygame.draw.rect(screen, RED, table) no longer render, just hitboxes now
+    pygame.draw.rect(screen,RED,progressBar)
     text = font.render(f"Inventory: {str(inventory)}, Item held: {itemHeld}", True, (255, 255, 255))
     screen.blit(text, (50, 50))
     pygame.display.update()
     second+=1
     if second == 60:
         second = 0
-        min+=1
         if min%5==0:
             h.increaseDifficulty()
             print("diff increased!")
         if not units:
-            print(f"Hordes progress: {h.progress()}")
+            progress = h.progress()
+            print(f"progress: {progress*100}%")
+            if progress>=1:
+                print("GAME OVER")
+                pygame.quit()
+                exit()
         else:
             units = [i for i in units if i.damage(h.getDmg()/len(units))]
             print(units)
 
+    progressBar =  pygame.Rect((1431,159),(progress*456,73))
+    progressBar.topright = (1431,86)
 
 
     clock.tick(60)

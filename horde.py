@@ -1,8 +1,8 @@
 HORDEMAXHEALTH =  10_000
-HORDELVLUP = 0.25
+HORDELVLUP = 5
 
 BOSSMAXHEALTH = 10_000 #macros for boss and horde. Leaving here so rebalancing will be easy
-BOSSDAMAGE = 1 #DPS that boss does to your troops/horde bar
+BOSSDAMAGE = 5 #DPS that boss does to your troops/horde bar
 
 class boss:
     def __init__(self,type):
@@ -22,7 +22,8 @@ class boss:
 
     def attackTopps(self)->int:
         return self.strength
-
+#1428,86
+#1431,159
 
 
 class horde:
