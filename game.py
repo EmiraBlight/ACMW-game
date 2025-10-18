@@ -1,16 +1,27 @@
+from queue  import Queue
 import pygame
 from enum import Enum
 from logic import inventory,unit
 from timingGame import timing_game
 from horde import horde
-
-
+import threading
+from timingGame import surface
 class loc(Enum):
     none=0
     anvil = 1
     table = 2
     enchant =3
     bow = 4
+
+mini_game_running = False
+mini_game_result = None
+
+event_queue = Queue()
+
+def run_timing_game_thread():
+    global mini_game_running, mini_game_result
+    mini_game_result = timing_game(event_queue) #sp the game is being run in the background of the timing game
+    mini_game_running = False #This little chunk of code is run in its own thread
 
 progress :float = 0
 
@@ -42,7 +53,7 @@ interactables = [anvil,table,enchant,bowString]  # list of things we can interac
 clock = pygame.time.Clock()
 progressBar =  pygame.Rect((1431,159),(1,73))
 progressBar.topright = (1431,86)
-
+res = None
 h = horde()
 
 def isNotColliding(p)-> bool:
@@ -61,8 +72,10 @@ while running:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
+        if mini_game_running:
+            event_queue.put(event)
+            continue
         if event.type == pygame.MOUSEBUTTONDOWN:
-            print(event.pos)
             if event.button == 1:
                 if event.pos[0]>108 and event.pos[0]<703 and event.pos[1]<703 and event.pos[1]>278:
                     target_x, target_y = event.pos
@@ -81,67 +94,66 @@ while running:
             if item==anvil:
                 if location != loc.anvil:
                     location = loc.anvil
-                    print(f"Player is colliding with the anvil!")
                     if not itemHeld:
                         target_x, target_y = x, y
-                        res= timing_game(screen)
-                        if res:
-                            print(f"{res=}")
-                            itemHeld = "Sword"
+                        if not mini_game_running:
+                            mini_game_running = True
+                            threading.Thread(target=run_timing_game_thread, daemon=True).start()
+                            if mini_game_result:
+                                itemHeld = "Sword"
+                                mini_game_result = None
                         break
             elif item==enchant:
                 if location!= loc.enchant:
                     location = loc.enchant
-                    print(f"Player is colliding with the enchant table!")
                     if not itemHeld:
                         target_x, target_y = x, y
-                        res= timing_game(screen)
-                        if res:
-                            print(f"{res=}")
-                            itemHeld = "Staff"
+                        if not mini_game_running:
+                            mini_game_running = True
+                            threading.Thread(target=run_timing_game_thread, daemon=True).start()
+                            if mini_game_result:
+                                itemHeld = "Staff"
+                                mini_game_result = None
                         break
             elif item==bowString:
                 if location!=loc.bow:
                     location = loc.bow
-                    print(f"Player is colliding with the bow table!")
                     if not itemHeld:
                         target_x, target_y = x, y
-                        res= timing_game(screen)
-                        if res:
-                            print(f"{res=}")
-                            itemHeld = "Staff"
+                        if not mini_game_running:
+                            mini_game_running = True
+                            threading.Thread(target=run_timing_game_thread, daemon=True).start()
+                            if mini_game_result:
+                                itemHeld = "Bow"
+                                mini_game_result = None
                         break
 
 
         if player.colliderect(item) and item==table:
             if location!= loc.table:
                 location = loc.table
-                print(f"Player is colliding with the table!")
                 if itemHeld:
                     units.append(unit(itemHeld,1000))
                     itemHeld= None
-                    print(f"{inventory=}")
                 break
 
         elif isNotColliding(player):
             if location!= loc.none:
-                print("player not colliding with anything!")
                 location = loc.none
     screen.blit(background_image, (0, 0))
     pygame.draw.rect(screen, GREEN, player)
     pygame.draw.rect(screen,RED,progressBar)
-    text = font.render(f"Inventory: {str(inventory)}, Item held: {itemHeld}", True, (255, 255, 255))
-    screen.blit(text, (50, 50))
+    screen.blit(surface, (0,0))
     pygame.display.update()
     second+=1
     if second == 60:
         second = 0
         if min%5==0:
             h.increaseDifficulty()
-            print("diff increased!")
+           # print("diff increased!")
         if not units:
             progress = h.progress()
-            print(f"progress: {progress*100}%")
+            #print(f"progress: {progress*100}%")
             if progress>=1:
                 print("GAME OVER")
                 pygame.quit()

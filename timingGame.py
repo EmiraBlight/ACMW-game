@@ -1,6 +1,7 @@
 import pygame
 from logic import unit_types
 from math import sqrt
+from queue import Queue
 WIDTH, HEIGHT = 1560, 821
 MARKERSIZE = 40
 bar_y = HEIGHT // 2
@@ -13,7 +14,7 @@ LIME = (100, 255, 0)
 YELLOW = (255, 255, 0)
 BLUE = (0, 150, 255)
 GREEN = (0, 255, 0)
-
+surface = pygame.Surface((WIDTH, HEIGHT),pygame.SRCALPHA)
 
 def getClosest(position,lookup:dict[str,tuple[int,int]])->str|None:
 
@@ -32,7 +33,7 @@ def getClosest(position,lookup:dict[str,tuple[int,int]])->str|None:
 
 
 
-def timing_game(screen) -> bool:
+def timing_game(events:Queue) -> bool:
     pygame.font.init()
     font = pygame.font.SysFont(None, 48)
     options_text = pygame.font.SysFont(None, 36)
@@ -50,7 +51,8 @@ def timing_game(screen) -> bool:
     speed = 8
 
     while running:
-        for event in pygame.event.get():
+        while not events.empty():
+            event = events.get()
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return False
@@ -68,27 +70,26 @@ def timing_game(screen) -> bool:
 
                 if score > 9:
                     running = False
+                print(f"{score=}")
 
         pos_x += direction * speed
         if pos_x + square_size >= bar_x + bar_length or pos_x <= bar_x:
             direction *= -1
-
-        pygame.draw.rect(screen, RED, (bar_x, bar_y - bar_height // 2, bar_length, bar_height))
-        pygame.draw.line(screen, GREEN, (WIDTH // 2, bar_y - bar_height // 2),
+        pygame.draw.rect(surface, RED, (bar_x, bar_y - bar_height // 2, bar_length, bar_height))
+        pygame.draw.line(surface, GREEN, (WIDTH // 2, bar_y - bar_height // 2),
                          (WIDTH // 2, bar_y + bar_height // 2 - 1), 20)
-        pygame.draw.line(screen, LIME, (WIDTH // 2 + 40, bar_y - bar_height // 2),
+        pygame.draw.line(surface, LIME, (WIDTH // 2 + 40, bar_y - bar_height // 2),
                          (WIDTH // 2 + 40, bar_y + bar_height // 2 - 1), 60)
-        pygame.draw.line(screen, LIME, (WIDTH // 2 - 40, bar_y - bar_height // 2),
+        pygame.draw.line(surface, LIME, (WIDTH // 2 - 40, bar_y - bar_height // 2),
                          (WIDTH // 2 - 40, bar_y + bar_height // 2 - 1), 60)
-        pygame.draw.line(screen, YELLOW, (WIDTH // 2 - 120, bar_y - bar_height // 2),
+        pygame.draw.line(surface, YELLOW, (WIDTH // 2 - 120, bar_y - bar_height // 2),
                          (WIDTH // 2 - 120, bar_y + bar_height // 2 - 1), 100)
-        pygame.draw.line(screen, YELLOW, (WIDTH // 2 + 120, bar_y - bar_height // 2),
+        pygame.draw.line(surface, YELLOW, (WIDTH // 2 + 120, bar_y - bar_height // 2),
                          (WIDTH // 2 + 120, bar_y + bar_height // 2 - 1), 100)
-        pygame.draw.rect(screen, BLUE, (pos_x, bar_y - square_size // 2, square_size, square_size))
+        pygame.draw.rect(surface, BLUE, (pos_x, bar_y - square_size // 2, square_size, square_size))
 
         text = font.render(f"Score: {score}/10", True, (255, 255, 255))
-        screen.blit(text, (50, 50))
-        pygame.display.update()
+        surface.blit(text, (50, 50))
         clock.tick(60)
-
+    surface.fill((0,0,0,0))
     return True
