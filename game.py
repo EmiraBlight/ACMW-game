@@ -51,7 +51,7 @@ bowString = pygame.Rect(506,618,35,77)
 interactables = [anvil,table,enchant,bowString]  # list of things we can interact with
 clock = pygame.time.Clock()
 progressBar =  pygame.Rect((1431,159),(1,73))
-progressBar.topright = (1431,86)
+progressBar.topright = (1431,79)
 res = None
 h = horde()
 
@@ -158,8 +158,8 @@ while running:
             units = [i for i in units if i.damage(h.getDmg()/len(units))]
             print(units)
 
-    progressBar =  pygame.Rect((1431,159),(progress*456,73))
-    progressBar.topright = (1431,86)
+    progressBar =  pygame.Rect((1431,159),(progress*456,72))
+    progressBar.topright = (1431,79)
 
 
     clock.tick(60)
