@@ -4,7 +4,7 @@ inventory = {x:0 for x in unit_types}
 
 class unit:
     def __init__(self, type,hp:float=100.0):
-        self.type:float = type
+        self.type:str = type
         self.hp:float = hp
 
     def damage(self,dmg:float)->bool:

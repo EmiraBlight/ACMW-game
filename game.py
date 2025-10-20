@@ -1,7 +1,7 @@
 from queue  import Queue
 import pygame
 from enum import Enum
-from logic import inventory,unit
+from logic import inventory,unit,unit_types
 from timingGame import timing_game
 from horde import horde
 import threading
@@ -12,6 +12,9 @@ class loc(Enum):
     table = 2
     enchant =3
     bow = 4
+
+
+dashCounter = {"Sword":0,"Bow":0,"Staff":0}
 
 mini_game_running = False
 
@@ -33,6 +36,9 @@ WIDTH, HEIGHT = 1560, 821
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 facingLeft = True
+
+zombie = pygame.image.load('assets/zombie.png').convert_alpha()
+zombie_box = zombie.get_rect()
 
 background_image = pygame.image.load('assets/background.png').convert()
 pygame.display.set_caption("Some cool game probably")
@@ -74,6 +80,7 @@ location = loc.none
 running = True
 itemHeld = None
 font = pygame.font.SysFont(None, 48)
+displayFont = pygame.font.SysFont(None, 64)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -90,12 +97,10 @@ while running:
     distance = (dx ** 2 + dy ** 2) ** 0.5
 
     if dx<0 and not facingLeft:
-        print("Now facing left")
         facingLeft = True
         player = player_left
 
     if dx>0 and facingLeft:
-        print("now facing right")
         facingLeft = False
         player = player_right
     if distance > speed:
@@ -157,6 +162,13 @@ while running:
     screen.blit(background_image, (0, 0))
     screen.blit(player, (x , y))
     pygame.draw.rect(screen,RED,progressBar)
+    screen.blit(zombie,(1431-(progress*456)-zombie.get_width()//2,43+zombie.get_height()//4))
+    sword = displayFont.render(f"{dashCounter['Sword']}", True, (255, 255, 255))
+    bow = displayFont.render(f"{dashCounter['Bow']}", True, (255, 255, 255)) #render info page
+    staff = displayFont.render(f"{dashCounter['Staff']}", True, (255, 255, 255))
+    screen.blit(staff,(1051, 655))
+    screen.blit(bow,(1051, 535))
+    screen.blit(sword, (1051, 401))
     screen.blit(surface, (0,0))
     pygame.display.update()
     second+=1
@@ -164,20 +176,23 @@ while running:
         second = 0
         if min%5==0:
             h.increaseDifficulty()
-           # print("diff increased!")
         if not units:
             progress = h.progress()
-            #print(f"progress: {progress*100}%")
             if progress>=1:
-                print("GAME OVER")
                 pygame.quit()
                 exit()
         else:
             units = [i for i in units if i.damage(h.getDmg()/len(units))]
-            print(units)
+            #43, progress*456 location for zombie thing
 
     progressBar =  pygame.Rect((1431,159),(progress*456,72))
     progressBar.topright = (1431,79)
+
+    dashCounter = {i:0 for i in unit_types}
+
+    for i in units:
+        dashCounter[i.type]+=1
+
 
 
     clock.tick(60)
