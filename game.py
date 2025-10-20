@@ -31,6 +31,9 @@ min: int = 0
 pygame.init()
 WIDTH, HEIGHT = 1560, 821
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
+facingLeft = True
+
 background_image = pygame.image.load('assets/background.png').convert()
 pygame.display.set_caption("Some cool game probably")
 
@@ -43,7 +46,12 @@ square_size = 50
 x, y = WIDTH // 2, HEIGHT // 2
 target_x, target_y = x, y
 speed = 7
-player = pygame.Rect(x - square_size // 2, y - square_size // 2, square_size, square_size)
+player_left = pygame.image.load('assets/left.png').convert_alpha()
+player_left= pygame.transform.scale(player_left,(62.5,87.5)).convert_alpha()
+
+player_right = pygame.transform.flip(player_left, True, False)
+
+player = player_left
 anvil = pygame.Rect(150, 250,75,75)
 table = pygame.Rect(294,405, 225,75)
 enchant = pygame.Rect(85,445,88,211)
@@ -80,16 +88,26 @@ while running:
                     target_x, target_y = event.pos
     dx, dy = target_x - x, target_y - y
     distance = (dx ** 2 + dy ** 2) ** 0.5
+
+    if dx<0 and not facingLeft:
+        print("Now facing left")
+        facingLeft = True
+        player = player_left
+
+    if dx>0 and facingLeft:
+        print("now facing right")
+        facingLeft = False
+        player = player_right
     if distance > speed:
         x += speed * dx / distance
         y += speed * dy / distance
     else:
         x, y = target_x, target_y
 
-    player = pygame.Rect(x - square_size // 2, y - square_size // 2, square_size, square_size)
+    playerHit = pygame.Rect(x - square_size // 2, y - square_size // 2, square_size, square_size)
     # Check for collisions with interactables
     for item in interactables:
-        if player.colliderect(item):
+        if playerHit.colliderect(item):
             if item==anvil:
                 if location != loc.anvil:
                     location = loc.anvil
@@ -125,7 +143,7 @@ while running:
                         break
 
 
-        if player.colliderect(item) and item==table:
+        if playerHit.colliderect(item) and item==table:
             if location!= loc.table:
                 location = loc.table
                 if itemHeld:
@@ -133,11 +151,11 @@ while running:
                     itemHeld= None
                 break
 
-        elif isNotColliding(player):
+        elif isNotColliding(playerHit):
             if location!= loc.none:
                 location = loc.none
     screen.blit(background_image, (0, 0))
-    pygame.draw.rect(screen, GREEN, player)
+    screen.blit(player, (x , y))
     pygame.draw.rect(screen,RED,progressBar)
     screen.blit(surface, (0,0))
     pygame.display.update()
