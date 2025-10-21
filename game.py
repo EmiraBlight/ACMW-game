@@ -69,6 +69,12 @@ progressBar.topright = (1431,79)
 res = None
 h = horde()
 
+#start music
+
+pygame.mixer.init()
+pygame.mixer.music.load("assets/music.mp3")
+pygame.mixer.music.play(-1, 0.0) #Runs in loop, 4 min audio likely wont need to repeat
+
 def isNotColliding(p)-> bool:
 
     for item in interactables:
