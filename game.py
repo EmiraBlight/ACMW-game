@@ -49,11 +49,11 @@ BLACK = (0, 0, 0)
 RED = (255,0,0)
 YELLOW = (255,255,0)
 square_size = 50
-x, y = WIDTH // 2, HEIGHT // 2
+x, y = 388, 533
 target_x, target_y = x, y
 speed = 7
 player_left = pygame.image.load('assets/left.png').convert_alpha()
-player_left= pygame.transform.scale(player_left,(62.5,87.5)).convert_alpha()
+player_left= pygame.transform.scale(player_left,(80,105)).convert_alpha()
 
 player_right = pygame.transform.flip(player_left, True, False)
 
