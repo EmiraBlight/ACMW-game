@@ -41,7 +41,7 @@ zombie = pygame.image.load('assets/zombie.png').convert_alpha()
 zombie_box = zombie.get_rect()
 
 background_image = pygame.image.load('assets/background.png').convert()
-pygame.display.set_caption("Some cool game probably")
+pygame.display.set_caption("Spookycraft")
 
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)

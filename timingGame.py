@@ -71,7 +71,6 @@ def timing_game(events:Queue) -> bool:
 
                 if score > 9:
                     running = False
-                print(f"{score=}")
 
         pos_x += direction * speed
         if pos_x + square_size >= bar_x + bar_length or pos_x <= bar_x:
